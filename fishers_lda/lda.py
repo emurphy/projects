@@ -60,7 +60,7 @@ class LDA():
         # Function estimates the LDA parameters
         def estimate_params(data):
             # group data by label column
-            grouped = data.groupby(self.data.ix[:,self.labelcol])
+            grouped = data.groupby(self.data.iloc[:,self.labelcol])
 
             # calculate means for each class
             means = {}
@@ -106,12 +106,12 @@ class LDA():
         traindata = []
         testdata = []
         # group data by label column
-        grouped = data.groupby(self.data.ix[:,self.labelcol])
+        grouped = data.groupby(self.data.iloc[:,self.labelcol])
         self.classes = [c for c in grouped.groups.keys()]
         self.classwise = {} 
         for c in self.classes:
             self.classwise[c] = grouped.get_group(c)
-            rows = random.sample(self.classwise[c].index, 
+            rows = random.sample(list(self.classwise[c].index),
                                      int(self.classwise[c].shape[0] * 
                                      self.split_ratio))
             traindata.append(self.classwise[c].ix[rows])
@@ -220,7 +220,7 @@ class LDA():
                         classes] for x in proj])
         # assign prediction labels based on the highest probability
         labels = np.argmax(likelihoods, axis = 1)
-        errors = np.sum(labels != data.ix[:, self.labelcol])
+        errors = np.sum(labels != data.iloc[:, self.labelcol])
         return errors
 
     def plot_bivariate_gaussians(self):
